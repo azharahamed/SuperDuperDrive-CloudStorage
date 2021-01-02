@@ -29,8 +29,9 @@ public class CredentailController {
             } else if (0 != this.credentialsService.addCredentials(credentials,loggedUserId)){
                 model.addAttribute("result","success");
             }
+            return "result";
         }
-        return "result";
+        return "redirect:/login";
     }
 
     @GetMapping("/deletecredential/{credentialid}")
