@@ -5,6 +5,7 @@ import com.udacity.jwdnd.course1.cloudstorage.model.Credentials;
 import com.udacity.jwdnd.course1.cloudstorage.model.Files;
 import com.udacity.jwdnd.course1.cloudstorage.model.Notes;
 import com.udacity.jwdnd.course1.cloudstorage.services.CredentialsService;
+import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.services.NotesService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,11 +24,13 @@ public class HomeController {
     private NotesService notesService;
     private UserService userService;
     private CredentialsService credentialsService;
+    private FileService fileService;
 
-    public HomeController(NotesService notesService, UserService userService, CredentialsService credentialsService){
+    public HomeController(NotesService notesService, UserService userService, CredentialsService credentialsService, FileService fileService){
         this.userService = userService;
         this.notesService = notesService;
         this.credentialsService = credentialsService;
+        this.fileService = fileService;
     }
 
     @GetMapping
@@ -36,8 +39,10 @@ public class HomeController {
         if(null != loggedUserId){
             model.addAttribute("noteslist", this.notesService.getNotes(loggedUserId));
             model.addAttribute("credentiallist", this.credentialsService.getCredentials(loggedUserId));
+            model.addAttribute("fileslist", this.fileService.getFiles(loggedUserId));
+            return "home";
         }
-        return "home";
+        return "redirect:/login";
     }
 
 }
