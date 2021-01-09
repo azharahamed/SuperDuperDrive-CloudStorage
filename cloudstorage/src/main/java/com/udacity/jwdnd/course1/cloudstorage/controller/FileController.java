@@ -33,18 +33,23 @@ public class FileController {
     public String saveFiles(Files files, @RequestParam("fileUpload") MultipartFile file, Model model){
         Integer loggedUserId = userService.getCurrentUserId();
         if(null != loggedUserId){
-            if(null == files.getFileId()){
-                if(fileService.isDuplicateFileName(file.getOriginalFilename())){
-                    model.addAttribute("result","error");
-                    model.addAttribute("message","Duplicate File Names are not allowed");
-                    return "result";
+            try {
+                if(null == files.getFileId()){
+                        if(fileService.isDuplicateFileName(file.getOriginalFilename())){
+                            model.addAttribute("result","error");
+                            model.addAttribute("message","Duplicate File Names are not allowed");
+                            return "result";
+                        }
+                        if(fileService.addFiles(file, loggedUserId)){
+                            model.addAttribute("result","success");
+                        } else {
+                            model.addAttribute("result","error");
+                            model.addAttribute("message","File upload failed - Please check whether the file is not empty and in correct format with allowed size!");
+                        }
                 }
-                if(fileService.addFiles(file, loggedUserId)){
-                    model.addAttribute("result","success");
-                } else {
-                    model.addAttribute("result","error");
-                    model.addAttribute("message","File upload failed - Please check whether the file is not empty and in correct format with allowed size!");
-                }
+            } catch (Exception e) {
+                model.addAttribute("result","error");
+                model.addAttribute("message","File upload failed - Please check whether the file is not empty and in correct format with allowed size!");
             }
         }
         return "result";
