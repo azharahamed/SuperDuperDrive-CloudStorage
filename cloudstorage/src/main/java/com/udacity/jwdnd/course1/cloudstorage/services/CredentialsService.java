@@ -43,6 +43,7 @@ public class CredentialsService {
         if(null != userId){
             List<Credentials> credentials = credentialsMapper.getUserCredentials(userId);
             for(Credentials credential : credentials){
+                credential.setCryptedPassword(credential.getPassword());
                 credential.setPassword(encryptionService.decryptValue(credential.getPassword(),credential.getKey()));
             }
             return credentials;
