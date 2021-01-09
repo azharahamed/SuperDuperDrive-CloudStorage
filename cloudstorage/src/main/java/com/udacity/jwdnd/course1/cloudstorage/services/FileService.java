@@ -23,6 +23,9 @@ public class FileService {
 
     public boolean addFiles(MultipartFile file, Integer loggerUserId){
         try{
+            if(null == file.getOriginalFilename() || file.getOriginalFilename().isEmpty()){
+                return false;
+            }
             Files newFile = new Files();
             newFile.setUserid(loggerUserId);
             newFile.setFilename(file.getOriginalFilename());
@@ -33,7 +36,7 @@ public class FileService {
         } catch (IOException e){
             return false;
         }
-        return false;
+        return true;
     }
 
     public void updateFiles(Files files) {
@@ -46,5 +49,9 @@ public class FileService {
 
     public void deleteFile(Integer fileid) {
         filesMapper.deleteFile(fileid);
+    }
+
+    public boolean isDuplicateFileName(String originalFilename) {
+        return (null != filesMapper.findByFilename(originalFilename));
     }
 }
