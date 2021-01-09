@@ -33,7 +33,7 @@ public class FileService {
             newFile.setContenttype(file.getContentType());
             newFile.setFiledata(file.getBytes());
             filesMapper.addFiles(newFile);
-        } catch (IOException e){
+        } catch (Exception e){
             return false;
         }
         return true;
